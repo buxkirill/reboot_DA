@@ -332,50 +332,10 @@ def get_rub_eur_rate(date):
         return float(soup.find('table', {'class': 'data'}).text[number + 13:number + 20].replace(',', '.'))
 
 
-def script_for_1task_onefile():
-    try:
-        os.mkdir('Task1')
-    except:
-        pass
-    clients_list = ['Monty', 'Triangle', 'Stone', 'Poly']
-    filepath = os.path.join('Task1', 'DDP_price.xlsx')
-    with pd.ExcelWriter(filepath) as writer:
-        for client in clients_list:
-            dbc[f'DDP_price_{client}'] = dbc.apply(lambda x:
-                                                   get_price_with_discounts(date=x.Date,
-                                                                            oil_price=x.OIL,
-                                                                            eurusd_rate=x['EURUSD=X'],
-                                                                            client=client,
-                                                                            discount_on_price_a=True,
-                                                                            discount_from_volume=True,
-                                                                            add_logistic_cost=True,
-                                                                            barrels_to_one_ton=16,
-                                                                            production_cost=400,
-                                                                            cn_logistic_cost_usd=130,
-                                                                            eu_logistic_cost_eur=30),
-                                                   axis=1)
-
-            dbc.loc[:, ['Date', 'EURUSD=X', 'OIL', f'DDP_price_{client}']].to_excel(writer, sheet_name=client)
-
-
-def script_for_1task_manyfiles():
-    try:
-        os.mkdir(os.path.join('Task1', 'Clients'))
-    except:
-        pass
-    dbc = pd.read_excel('cur_oil.xlsx')
-    clients_list = ['Monty', 'Triangle', 'Stone', 'Poly']
-
-    for client in clients_list:
-        filepath = os.path.join('Task1', 'Clients', f'{client}.xlsx')
-        with pd.ExcelWriter(filepath) as writer:
-            dbc.loc[:, ['Date', 'EURUSD=X', 'OIL', f'DDP_price_{client}']].to_excel(writer, sheet_name='DDP_price')
-
-
 def script_for_2task():
     client = input('Введите название компании (Monty, Triangle, Stone, Poly): ')
     date = input('Введите дату в формате YYYY-MM-DD: ')
-    return get_price_with_discounts(date=datetime.datetime(int(date.split('-')[0]),
+    return print(get_price_with_discounts(date=datetime.datetime(int(date.split('-')[0]),
                                                            int(date.split('-')[1]),
                                                            int(date.split('-')[2])),
                                     oil_price='auto',
@@ -387,7 +347,7 @@ def script_for_2task():
                                     barrels_to_one_ton=16,
                                     production_cost=400,
                                     cn_logistic_cost_usd=130,
-                                    eu_logistic_cost_eur=30)
+                                    eu_logistic_cost_eur=30))
 
 
 def script_for_3task():
