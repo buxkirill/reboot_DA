@@ -363,7 +363,7 @@ def script_for_1task_manyfiles():
         os.mkdir(os.path.join('Task1', 'Clients'))
     except:
         pass
-
+    dbc = pd.read_excel('cur_oil.xlsx')
     clients_list = ['Monty', 'Triangle', 'Stone', 'Poly']
 
     for client in clients_list:
