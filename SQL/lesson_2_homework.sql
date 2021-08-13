@@ -2,6 +2,7 @@
 --colab/jupyter: https://colab.research.google.com/drive/1j4XdGIU__NYPVpv74vQa9HUOAkxsgUez?usp=sharing
 
 Задание 1: Вывести name, class по кораблям, выпущенным после 1920
+
 select name, class 
 from ships
 where launched > 1920;
@@ -10,8 +11,7 @@ where launched > 1920;
 
 select name, class 
 from ships
-where launched > 1920
-	and launched <= 1942;
+where launched > 1920 and launched <= 1942;
 
 Задание 3: Какое количество кораблей в каждом классе. Вывести количество и class
 
@@ -22,10 +22,9 @@ order by count(*);
 
 Задание 4: Для классов кораблей, калибр орудий которых не менее 16, укажите класс и страну. (таблица classes)
 
-select distinct t2.country, t2.class
-from ships t1
-join classes t2 on t2.class = t1.class
-where t2.bore >= 16;
+select country, class
+from classes 
+where bore >= 16;
 
 Задание 5: Укажите корабли, потопленные в сражениях в Северной Атлантике (таблица Outcomes, North Atlantic). Вывод: ship.
 
@@ -53,9 +52,9 @@ from outcomes t1
 join battles t2 on t2.name = t1.battle 
 where t1.result='sunk' 
 and t2.date=(select max(date)
-			from outcomes t1
-			join battles t2 on t2.name = t1.battle 
-							and t1."result"='sunk');
+		from outcomes t1
+		join battles t2 on t2.name = t1.battle --двойная проверка в Join
+				and t1."result"='sunk');
 
 
 Задание 7: Вывести название корабля (ship) и класс (class) последнего потопленного корабля
@@ -72,10 +71,10 @@ with query_from_6_task as (
 		join battles t2 on t2.name = t1.battle 
 		where t1.result='sunk' 
 		and t2.date=(select max(date)
-					from outcomes t1
-					join battles t2 on t2.name = t1.battle 
-									and t1."result"='sunk'
-					)
+				from outcomes t1
+				join battles t2 on t2.name = t1.battle 
+						and t1."result"='sunk'
+			     )
 )
 select t1.ship, t2.class
 from query_from_6_task t1
