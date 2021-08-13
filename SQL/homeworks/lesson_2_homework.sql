@@ -15,9 +15,9 @@ where launched > 1920 and launched <= 1942;
 
 Задание 3: Какое количество кораблей в каждом классе. Вывести количество и class
 
-select ships.class, count(*)
+select class, count(*)
 from ships 
-group by ships.class
+group by class
 order by count(*);
 
 Задание 4: Для классов кораблей, калибр орудий которых не менее 16, укажите класс и страну. (таблица classes)
@@ -85,12 +85,11 @@ left outer join ships t2 on t2.name=t1.ship;
 /*
  Таких кораблей не оказалось
  */
-select t1.name , t2.class
+select t3.ship , t2.class
 from ships t1
-left join classes t2 on t2.class = t1.class
-left join outcomes t3 on t3.ship = t1.name
-where t3.result='sunk'
-	and t2.bore >= 16
+left outer join classes t2 on t2.class = t1.class
+left outer join outcomes t3 on t3.ship = t1.name
+where t3.result='sunk' and t2.bore >= 16
 	
 	
 Задание 9: Вывести все классы кораблей, выпущенные США (таблица classes, country = 'USA'). Вывод: class
