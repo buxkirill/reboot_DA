@@ -4,11 +4,11 @@
 --Корабли: Для каждого класса определите число кораблей этого класса, потопленных в сражениях. Вывести: класс и число потопленных кораблей.
 
 with grouped_sunken_ships as (
-					select ships.class, count(*) as count_sunk
-					from ships
-					left outer join outcomes on ships.name=outcomes.ship
-					where upper(result) = 'SUNK'
-					group by ships.class
+		select ships.class, count(*) as count_sunk
+		from ships
+		left outer join outcomes on ships.name=outcomes.ship
+		where upper(result) = 'SUNK'
+		group by ships.class
 )
 select t1.class,
 case 
@@ -33,10 +33,10 @@ left outer join grouped_sunken_ships t2 on t2.class=t1.class;
  */
 
 with min_date_launched_by_type as (
-	select t1.type, min(t2.launched) as year_of_first_launch_by_type
-	from classes t1
-	join ships t2 on t1.class=t2.class
-	group by t1.type
+		select t1.type, min(t2.launched) as year_of_first_launch_by_type
+		from classes t1
+		join ships t2 on t1.class=t2.class
+		group by t1.type
 )
 select classes.class, 
 	case 
