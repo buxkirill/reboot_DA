@@ -110,19 +110,20 @@ where upper(ships.class)='KONGO';
 -- Компьютерная фирма: Сделать view (название all_products_flag_300) для всех товаров (pc, printer, laptop) с флагом, если стоимость больше > 300. Во view три колонки: model, price, flag
 
 create view all_products_flag_300_second_stream as (
+	with combined_tables as (
+		select price, product.model from product join laptop  on product.model = laptop.model 
+		union all
+		select price, product.model from product join pc  on product.model = pc.model 
+		union all 
+		select price, product.model from product join printer  on product.model = printer.model
+	)
 	select *,
 	case 
 		when price > 300
 		then 1
 		else 0
 	end flag
-	from (
-		select price, product.model from product join laptop  on product.model = laptop.model 
-		union all
-		select price, product.model from product join pc  on product.model = pc.model 
-		union all 
-		select price, product.model from product join printer  on product.model = printer.model
-	) combined_tables
+	from combined_tables
 );
 select model, price, flag from all_products_flag_300_second_stream;
 
@@ -167,10 +168,10 @@ and printer.price > (
 -- Компьютерная фирма: Вывести все товары производителя = 'A' со стоимостью выше средней по принтерам производителя = 'D' и 'C'. Вывести model
 
 with all_products_maker_a as (
-	select product.model, price	from printer join product on product.model=printer.model
+	select product.model, price from printer join product on product.model=printer.model
 	where upper(product.maker) = 'A' 
 	union all 
-	select product.model, price from pc	join product on product.model=pc.model
+	select product.model, price from pc join product on product.model=pc.model
 	where upper(product.maker) = 'A' 
 	union all
 	select product.model, price from laptop	join product on product.model=laptop.model
@@ -227,6 +228,7 @@ create view count_products_by_makers_second_stream as (
 );
 
 select * from count_products_by_makers_second_stream;
+
 --task7 (lesson4)
 -- По предыдущему view (count_products_by_makers) сделать график в colab (X: maker, y: count)
 
@@ -247,8 +249,8 @@ create table printer_updated_second_stream as (
 	select * 
 	from printer
 	where model not in (select model 
-						from product 
-						where Upper(maker)='D'
+			    from product 
+	        	    where Upper(maker)='D'
 	)
 );
 
@@ -258,7 +260,13 @@ select * from printer_updated_second_stream;
 -- Компьютерная фирма: Сделать на базе таблицы (printer_updated) view с дополнительной колонкой производителя (название printer_updated_with_makers)
 
 create view printer_updated_view_second_stream as ( 
-	select t1.code, t1.model, t1.color, t1.type, t1.price, t2.maker
+	select 
+		t1.code, 
+		t1.model, 
+		t1.color, 
+		t1.type, 
+		t1.price, 
+		t2.maker
 	from printer_updated_second_stream t1
 	left outer join product t2 on t2.model=t1.model
 );
