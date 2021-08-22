@@ -39,7 +39,7 @@ create table ships_without_n_second_stream as (
 
 select * from ships_without_n_second_stream;
 
-
+/*___________________________________________________ДОМАШНЕЕ ЗАДАНИЕ___________________________________________________*/
 
 --task13 (lesson3)
 --Компьютерная фирма: Вывести список всех продуктов и производителя с указанием типа продукта (pc, printer, laptop). Вывести: model, maker, type
@@ -83,8 +83,9 @@ where ships.class is null;
 --Корабли: Укажите сражения, которые произошли в годы, не совпадающие ни с одним из годов спуска кораблей на воду.
 
 /*
-Все сражения прошли в 1941, 1942, 1943, 1944 годах. В каждом из перечисленных годов был корабль, который первый раз спускался на воду
- */
+Все сражения прошли в 1941, 1942, 1943, 1944 годах. 
+В каждом из вышеперечисленных годов был хоть один корабль, который первый раз спускался на воду
+*/
 
 with all_battles_date as (
 		select battle, to_char(date, 'YYYY') as date
@@ -97,7 +98,6 @@ from all_battles_date
 where date not in (select distinct cast(launched as text) 
 				   from ships);
 				  
-
 --task17 (lesson3)
 --Корабли: Найдите сражения, в которых участвовали корабли класса Kongo из таблицы Ships.
 
@@ -124,7 +124,7 @@ create view all_products_flag_300_second_stream as (
 		select price, product.model from product join printer  on product.model = printer.model
 	) combined_tables
 );
-select * from all_products_flag_300_second_stream;
+select model, price, flag from all_products_flag_300_second_stream;
 
 --task2  (lesson4)
 -- Компьютерная фирма: Сделать view (название all_products_flag_avg_price) для всех товаров (pc, printer, laptop) с флагом, если стоимость больше cредней . Во view три колонки: model, price, flag
@@ -148,6 +148,7 @@ create view all_products_flag_avg_price_second_stream as (
 );
 
 select * from all_products_flag_avg_price_second_stream;
+
 --task3  (lesson4)
 -- Компьютерная фирма: Вывести все принтеры производителя = 'A' со стоимостью выше средней по принтерам производителя = 'D' и 'C'. Вывести model
 
@@ -166,19 +167,13 @@ and printer.price > (
 -- Компьютерная фирма: Вывести все товары производителя = 'A' со стоимостью выше средней по принтерам производителя = 'D' и 'C'. Вывести model
 
 with all_products_maker_a as (
-	select product.model, price
-	from printer
-	join product on product.model=printer.model
+	select product.model, price	from printer join product on product.model=printer.model
 	where upper(product.maker) = 'A' 
 	union all 
-	select product.model, price
-	from pc
-	join product on product.model=pc.model
+	select product.model, price from pc	join product on product.model=pc.model
 	where upper(product.maker) = 'A' 
 	union all
-	select product.model, price
-	from laptop
-	join product on product.model=laptop.model
+	select product.model, price from laptop	join product on product.model=laptop.model
 	where upper(product.maker) = 'A'
 )
 select *
@@ -197,23 +192,17 @@ where price > (
 В этом задании я бы вначале уточнил, что является "уникальным" продуктом. 
 Являются ли уникальными 2 продукта с одинаковыми номерами модели, но с разными ценами/характеристиками?
 В моем понимании являются. В таком случае у нас нет неуникальных продуктов.
-Решил посчитать среднюю цену по каждой уникальной модели для производителя А (думаю, что так показать среднюю цену лучше, чем просто получить одну цифру по всем 15 продукта производителя А)
+Решил посчитать среднюю цену по каждой уникальной модели для производителя А (думаю, что лучше так показать среднюю цену, чем просто получить одну цифру по всем 15 продукта производителя А)
  */
 
 with all_products_maker_a as (
-	select product.model, price, code
-	from printer
-	join product on product.model=printer.model
+	select product.model, price, code from printer join product on product.model=printer.model
 	where upper(product.maker) = 'A' 
 	union all
-	select product.model, price, code
-	from pc
-	join product on product.model=pc.model
+	select product.model, price, code from pc join product on product.model=pc.model
 	where upper(product.maker) = 'A' 
 	union all
-	select product.model, price, code
-	from laptop
-	join product on product.model=laptop.model
+	select product.model, price, code from laptop join product on product.model=laptop.model
 	where upper(product.maker) = 'A'
 )
 select model, avg(price)
@@ -227,9 +216,9 @@ create view count_products_by_makers_second_stream as (
 	with combined_tables as (
 		select price, product.model, maker from product join laptop  on product.model = laptop.model
 		union all
-		select price, product.model, maker   from product join pc  on product.model = pc.model
+		select price, product.model, maker from product join pc  on product.model = pc.model
 		union all 
-		select price, product.model, maker  from product join printer  on product.model = printer.model
+		select price, product.model, maker from product join printer  on product.model = printer.model
 	)
 	select maker, count(*)
 	from combined_tables
@@ -273,6 +262,7 @@ create view printer_updated_view_second_stream as (
 	from printer_updated_second_stream t1
 	left outer join product t2 on t2.model=t1.model
 );
+
 select * from printer_updated_view_second_stream;
 
 --task10 (lesson4)
@@ -337,7 +327,7 @@ from (select name from ships
 	  union
 	  select ship from outcomes
 	  ) all_ships_name
-where upper(substring(name, 1, 1)) in ('O', 'M');
+where upper(substring(trim(name), 1, 1)) in ('O', 'M');
 
 --task15 (lesson4)
 -- Корабли: Вернуть количество кораблей, у которых название состоит из двух слов.
@@ -347,7 +337,7 @@ from (select name from ships
 	  union
 	  select ship from outcomes
 	  ) all_ships_name
-where -- количество пробелов в слове = 1. Предварительно использовав trim для обрезания пробелов в начале и в конце (на всякий случай)
+where --где количество пробелов в слове = 1. Предварительно использовав trim для обрезания пробелов в начале и в конце (на всякий случай)
 (length(trim(name)) - length(replace(trim(name), ' ', ''))) = 1; 
 
 
