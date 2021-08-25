@@ -18,8 +18,7 @@ plt.show()
 
 
 
---task12 (lesson5)
---task1 (lesson5)
+--task12 (lesson5) and task1 (lesson5)
 -- Компьютерная фирма: Сделать view (pages_all_products), в которой будет постраничная разбивка всех продуктов (не более двух продуктов на одной странице). Вывод: все данные из laptop, номер страницы, список всех страниц
 
 create view pages_all_products_second_stream as (
@@ -52,16 +51,26 @@ select * from pages_all_products_second_stream;
 --task2 (lesson5)
 -- Компьютерная фирма: Сделать view (distribution_by_type), в рамках которого будет процентное соотношение всех товаров по типу устройства. Вывод: производитель,
 
-create view distribution_by_type_second_stream as (
+/*
+Кажется, что в задании не дописали какие колонки еще требуется выводить (стоит запятая в конце. Во всех остальных заданиях предложение на запятую не заканчивалось)
+Сделал вывод только по type и количеству. Добавить производителя не сложно, но в условии было указано сделать группировку по типу устройства
+*/
+
+create or replace view distribution_by_type_second_stream as (
 	select distinct type,
-		count(*) over(partition by type) 
+		cast(count_by_type as float) / count_all as part
 	from (
-		select maker, product.type from product join pc on pc.model = product.model
-		union all 
-		select maker, product.type from product join laptop on laptop.model = product.model
-		union all 
-		select maker, product.type from product join printer on printer.model = product.model
-	) as t1
+		select  type,
+			count(*) over(partition by type) as count_by_type,
+			count(*) over() as count_all
+		from (
+			select maker, product.type from product join pc on pc.model = product.model
+			union all 
+			select maker, product.type from product join laptop on laptop.model = product.model
+			union all 
+			select maker, product.type from product join printer on printer.model = product.model
+		) as t1
+	) as t2
 );
 select * from distribution_by_type_second_stream;
 
@@ -128,11 +137,3 @@ from (
 	join printer on printer.model=product.model
 ) as t1
 where row_num in (1,2,3);
-
-
-
-
-
-
-
-
