@@ -2,7 +2,8 @@
 --colab/jupyter: https://colab.research.google.com/drive/1j4XdGIU__NYPVpv74vQa9HUOAkxsgUez?usp=sharing
 
 --task1  (lesson6, дополнительно)
--- SQL: Создайте таблицу с синтетическими данными (10000 строк, 3 колонки, все типы int) и заполните ее случайными данными от 0 до 1 000 000. Проведите EXPLAIN операции и сравните базовые операции.
+-- SQL: Создайте таблицу с синтетическими данными (10000 строк, 3 колонки, все типы int) и заполните ее случайными данными от 0 до 1 000 000. 
+-- Проведите EXPLAIN операции и сравните базовые операции.
 
 create table random_numbers_table as (
 	select 
@@ -59,6 +60,7 @@ and col3 != 0;
 /*
 Проверим оператор case
  */
+ 
 explain 
 select *,
 	case 
@@ -72,7 +74,7 @@ from random_numbers_table
 /*
 Проверим агрегацию
  */
-
+ 
 explain
 select count(*)
 from random_numbers_table
