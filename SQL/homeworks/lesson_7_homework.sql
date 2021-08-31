@@ -9,19 +9,18 @@ ok
 --task2  (lesson7)
 -- oracle: https://leetcode.com/problems/duplicate-emails/
 
-# Write your MySQL query statement below
-select email
-from (
-    select *,
-        row_number() over(partition by email) as row_num
+with query as (
+    select email,
+        row_number() over(partition by email order by id)  row_num
     from person
-) as t1
+)
+select email 
+from query
 where row_num = 2;
 
 --task3  (lesson7)
 -- oracle: https://leetcode.com/problems/employees-earning-more-than-their-managers/
 
-# Write your MySQL query statement below
 select t1.name as employee
 from Employee t1
 left outer join Employee t2 on t1.managerid=t2.id
@@ -31,7 +30,6 @@ where t1.salary > t2.salary
 --task4  (lesson7)
 -- oracle: https://leetcode.com/problems/rank-scores/
 
-# Write your MySQL query statement below
 select 
     score,
     dense_rank() over(order by score desc) as "Rank"
@@ -40,7 +38,6 @@ from scores
 --task5  (lesson7)
 -- oracle: https://leetcode.com/problems/combine-two-tables/
 
-# Write your MySQL query statement below
 select 
     FirstName,
     LastName,
