@@ -31,5 +31,22 @@ where t1.salary > t2.salary
 --task4  (lesson7)
 -- oracle: https://leetcode.com/problems/rank-scores/
 
+# Write your MySQL query statement below
+select 
+    score,
+    dense_rank() over(order by score desc) as "Rank"
+from scores
+
 --task5  (lesson7)
 -- oracle: https://leetcode.com/problems/combine-two-tables/
+
+# Write your MySQL query statement below
+select 
+    FirstName,
+    LastName,
+    City,
+    State
+from person
+left outer join address
+    on address.personid=person.personid
+
