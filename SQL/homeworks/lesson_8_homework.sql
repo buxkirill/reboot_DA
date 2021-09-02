@@ -1,6 +1,21 @@
 --task1  (lesson8)
 -- oracle: https://leetcode.com/problems/department-top-three-salaries/
 
+with query as (
+    select 
+        t2.name as Department, 
+        t1.name as Employee, 
+        t1.salary as Salary,
+        dense_rank() over(partition by t1.departmentid order by t1.salary desc) as rank_col
+    from employee t1
+    join department t2 on t2.id=t1.departmentid
+)
+
+select Department, Employee, Salary
+from query
+where rank_col <= 3;
+
+
 --task2  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/17
 
