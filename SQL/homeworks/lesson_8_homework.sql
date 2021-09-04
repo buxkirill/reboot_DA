@@ -157,5 +157,16 @@ where count_lesson = (
 --task14  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/43
 
+select last_name
+from Teacher
+join Schedule on Teacher.id=Schedule.teacher
+join Subject on Subject.id=Schedule.subject
+where Subject.name = 'Physical Culture'
+ORDER BY last_name
+
 --task15  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/63
+
+select concat(last_name, '.', substr(first_name,1,1), '.', substr(middle_name, 1, 1), '.') as name
+from Student
+order by name asc
