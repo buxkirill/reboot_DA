@@ -28,25 +28,6 @@ group by member_name, status
 --task3  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/13
 
-неправильно
-with names as (
-    select names
-    from (
-        select *,
-            row_number() over(partition by names) as row_num
-        from (
-            select upper(substring(name, 1, instr(name, ' ') - 1)) as names
-            from (select distinct name from Passenger) as t4
-        ) as t1
-    ) as t2
-    where row_num = 2
-)
-select name
-from Passenger
-where upper(substring(name, 1, instr(name, ' ') - 1)) IN (select names from names)
-
-
-корректно
 with dublicate_name as (
     select name
     From (
@@ -63,14 +44,35 @@ where name IN (select name from dublicate_name)
 --task4  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/38
 
+select count(*) as count
+from Student
+where upper(first_name) = 'ANNA'
+
 --task5  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/35
+
+select count(*) as count
+from (
+    select distinct classroom
+    from Schedule
+    where date = date('2019.09.02')
+) as t1
 
 --task6  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/38
 
+select count(*) as count
+from Student
+where upper(first_name) = 'ANNA'
+
 --task7  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/32
+
+select floor(avg(years)) as age
+from (
+    select floor(datediff(now(), birthday) / 365.23) as years
+    from FamilyMembers
+) as t1
 
 --task8  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/27
