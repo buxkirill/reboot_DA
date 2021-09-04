@@ -110,11 +110,49 @@ limit 1
 --task11 (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/20
 
+select member_name, status, sum(unit_price * amount) as costs
+from FamilyMembers t1
+join Payments t2 on t2.family_member=t1.member_id
+join Goods t3 on t3.good_id=t2.good
+join GoodTypes t4 on t4.good_type_id=t3.type
+where t4.good_type_name = 'entertainment'
+group by member_name, status
+
 --task12  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/55
 
+with company_low_trips as (
+    select company, count(*) as count_trips
+    from trip
+    group by company
+    having count_trips = (
+        select min(count_trips) 
+        from (select count(*) as count_trips
+            from trip
+            group by company
+        ) as t1
+    ) 
+)
+delete from Company
+where Company.id in (
+    select company
+    from company_low_trips
+)
+
 --task13  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/45
+
+with count_classroom_lessons as (
+    select classroom, COUNT(*) as count_lesson
+    from Schedule
+    GROUP BY classroom
+)
+select classroom
+from count_classroom_lessons 
+where count_lesson = (
+    select max(count_lesson)
+    from count_classroom_lessons
+)
 
 --task14  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/43
