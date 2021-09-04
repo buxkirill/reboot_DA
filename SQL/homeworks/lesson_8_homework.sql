@@ -19,8 +19,46 @@ where rank_col <= 3;
 --task2  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/17
 
+select member_name, status, sum(unit_price * amount) as costs
+from FamilyMembers t1
+left join Payments t2 on t2.family_member=t1.member_id
+where year(date) = '2005' 
+group by member_name, status
+
 --task3  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/13
+
+неправильно
+with names as (
+    select names
+    from (
+        select *,
+            row_number() over(partition by names) as row_num
+        from (
+            select upper(substring(name, 1, instr(name, ' ') - 1)) as names
+            from (select distinct name from Passenger) as t4
+        ) as t1
+    ) as t2
+    where row_num = 2
+)
+select name
+from Passenger
+where upper(substring(name, 1, instr(name, ' ') - 1)) IN (select names from names)
+
+
+корректно
+with dublicate_name as (
+    select name
+    From (
+        select name,
+            row_number() over(partition by name) as row_num
+        from Passenger
+    ) as t1
+    where row_num = 2
+) 
+select distinct name
+from Passenger
+where name IN (select name from dublicate_name)
 
 --task4  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/38
