@@ -77,11 +77,35 @@ from (
 --task8  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/27
 
+select good_type_name, sum(amount * unit_price) as costs
+from Payments
+join Goods on Payments.good=Goods.good_id
+join GoodTypes on GoodTypes.good_type_id=Goods.type
+where year(payments.date) = 2005
+GROUP BY good_type_name
+
 --task9  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/37
 
+select floor(datediff(now(), birthday) / 365.23) as year
+from Student
+order by birthday DESC 
+limit 1
+
 --task10  (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/44
+
+with id_10_classes as (
+    select id
+    from Class
+    where trim(substr(name, 1, instr(name, ' '))) = '10'
+)
+select floor(datediff(now(), birthday) / 365.23) as max_year
+from Student
+join Student_in_class on Student.id=Student_in_class.student
+where Student_in_class.class in (select * from id_10_classes)
+order by birthday
+limit 1
 
 --task11 (lesson8)
 -- https://sql-academy.org/ru/trainer/tasks/20
