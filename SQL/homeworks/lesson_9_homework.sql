@@ -42,6 +42,30 @@ having avg(price) < 800;
 --task1  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/the-report/problem
 
+select 
+    case
+        when grade >= 8
+        then name
+        else null
+    end name, 
+    grade,
+    marks 
+from (
+    select 
+        students.name,
+        students.marks,
+        grades.grade,
+        case 
+            when students.marks between grades.min_mark and grades.max_mark
+            then 1
+            else 0
+        end flag_grade
+    from students 
+    cross join grades
+) t1
+where flag_grade = 1
+order by grade desc, name, marks asc;
+
 --task2  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/occupations/problem
 
