@@ -124,8 +124,18 @@ where upper(substr(city, -1, 1)) not in ('E', 'U', 'I', 'O', 'A');
 --task5  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/weather-observation-station-11/problem
 
+select distinct city 
+from STATION 
+where upper(substr(city, 0, 1)) not in ('E', 'U', 'I', 'O', 'A')
+or upper(substr(city, -1, 1)) not in ('E', 'U', 'I', 'O', 'A');
+
 --task6  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/weather-observation-station-12/problem
+
+select distinct city 
+from STATION 
+where upper(substr(city, 0, 1)) not in ('E', 'U', 'I', 'O', 'A')
+and upper(substr(city, -1, 1)) not in ('E', 'U', 'I', 'O', 'A');
 
 --task7  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/salary-of-employees/problem
