@@ -1,35 +1,3 @@
---task4 (lesson9)
--- Компьютерная фирма: Найти производителей, которые выпускают более одной модели, при этом все выпускаемые производителем модели являются продуктами одного типа. Вывести: maker, type
-
-with makers_with_one_type as (
-	select maker
-	from (
-		select *,
-			count(*) over(partition by maker) c
-		from (
-			select maker, type
-			from product
-			group by maker, type
-			order by maker 
-		) as t1
-	) as t2
-	where c = 1
-)
-select maker, count(*)
-from product
-where maker in (select * from makers_with_one_type)
-group by maker 
-having count(*) > 1;
-
---task5 (lesson9)
--- Компьютерная фирма: Найти максимальную, минимальную и среднюю цену на персональные компьютеры при условии, что средняя цена не превышает 600
-
-select model, min(price), max(price), avg(price)
-from pc
-group by model
-having avg(price) <= 600;
-
-
 --task6 (lesson9)
 -- Компьютерная фирма: Получить количество ПК и среднюю цену для каждой модели, средняя цена которой менее 800
 
@@ -37,7 +5,6 @@ select model, count(*), avg(price)
 from pc
 group by model
 having avg(price) < 800;
-
 
 --task1  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/the-report/problem
@@ -140,5 +107,34 @@ and upper(substr(city, -1, 1)) not in ('E', 'U', 'I', 'O', 'A');
 --task7  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/salary-of-employees/problem
 
+select name
+from Employee 
+where months < 10
+and salary > 2000;
+
 --task8  (lesson9)
 -- oracle: https://www.hackerrank.com/challenges/the-report/problem
+
+select 
+    case
+        when grade >= 8
+        then name
+        else null
+    end name, 
+    grade,
+    marks 
+from (
+    select 
+        students.name,
+        students.marks,
+        grades.grade,
+        case 
+            when students.marks between grades.min_mark and grades.max_mark
+            then 1
+            else 0
+        end flag_grade
+    from students 
+    cross join grades
+) t1
+where flag_grade = 1
+order by grade desc, name, marks asc;
